@@ -1,6 +1,4 @@
-from rest_framework.views import APIView
-from phonenumber_field.serializerfields import PhoneNumberField
-from rest_framework.fields import empty
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.exceptions import AuthenticationFailed
@@ -14,10 +12,11 @@ import string
 User = get_user_model()
 
 
-class LoginAPIVIew(APIView):
+class LoginAPIVIew(GenericAPIView):
+    serializer_class = PhoneSerializer
 
     def post(self, request):
-        serializer = PhoneSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         phone_number = serializer.validated_data.get("phone_number")
 
@@ -31,14 +30,15 @@ class LoginAPIVIew(APIView):
         }
         user, created = User.objects.update_or_create(
             phone_number=phone_number, defaults=defaults)
-        
-        return Response({"auth_code":auth_code}, status=HTTP_200_OK)
+
+        return Response({"auth_code": auth_code}, status=HTTP_200_OK)
 
 
-class ActivateAPIView(APIView):
+class ActivateAPIView(GenericAPIView):
+    serializer_class = ActivateSerializer
 
     def post(self, request):
-        serializer = ActivateSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         try:
@@ -48,7 +48,7 @@ class ActivateAPIView(APIView):
 
         token = Token.objects.create(user=user).key
 
-        return Response({"token":token}, status=HTTP_200_OK)
+        return Response({"token": token}, status=HTTP_200_OK)
 
 
 class UserAPIView(RetrieveUpdateAPIView):

@@ -38,4 +38,4 @@ Authorization: Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b
 ```
 5. Профиль пользователя -> GET http://0.0.0.0:8000/api/v1/me/
 6. Добавить activated_invite_code -> PATCH http://0.0.0.0:8000/api/v1/me/
-7. Swagger можно найти тут -> GET http://0.0.0.0:8000/swagger/
+7. Swagger можно найти тут -> GET http://0.0.0.0:8000/schema/swagger/
