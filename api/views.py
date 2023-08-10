@@ -4,6 +4,7 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from .serializers import PhoneSerializer, ActivateSerializer, UserSerializer
 import random
@@ -52,10 +53,9 @@ class ActivateAPIView(GenericAPIView):
 
 
 class UserAPIView(RetrieveUpdateAPIView):
-
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         phone_number = self.request.user.phone_number
         return User.objects.get(phone_number=phone_number)
-
